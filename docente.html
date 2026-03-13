@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Docente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="bg-green-700 text-white flex justify-between items-center p-4">
+        <h1 class="text-lg font-bold">Panel del Docente</h1>
+
+        <button onclick="window.location.href='index.html'" class="bg-red-500 px-4 py-1 rounded">
+            Cerrar sesión
+        </button>
+    </div>
+
+    <div class="flex">
+
+        <div class="w-64 bg-white h-screen shadow p-4">
+
+            <h2 class="font-semibold mb-4">Menú</h2>
+
+            <ul class="space-y-3">
+
+                <li class="hover:text-green-600 cursor-pointer">
+                    Cursos asignados
+                </li>
+
+                <li class="hover:text-green-600 cursor-pointer">
+                    Estudiantes inscritos
+                </li>
+
+                <li class="hover:text-green-600 cursor-pointer">
+                    Calificaciones
+                </li>
+
+                <li class="hover:text-green-600 cursor-pointer">
+                    Perfil
+                </li>
+
+            </ul>
+
+        </div>
+
+        <div class="flex-1 p-6">
+
+            <h2 class="text-2xl font-semibold mb-4">
+                Bienvenido Docente
+            </h2>
+
+            <div class="bg-white p-4 rounded shadow">
+                Aquí podrás ver los cursos que impartes.
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

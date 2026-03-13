@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Estudiante</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <div class="bg-blue-800 text-white flex justify-between items-center p-4">
+        <h1 class="text-lg font-bold">Panel del Estudiante</h1>
+
+        <button onclick="window.location.href='index.html'" class="bg-red-500 px-4 py-1 rounded hover:bg-red-600">
+            Cerrar sesión
+        </button>
+    </div>
+
+    <div class="flex">
+
+        <!-- Sidebar -->
+        <div class="w-64 bg-white h-screen shadow p-4">
+
+            <h2 class="font-semibold mb-4">Menú</h2>
+
+            <ul class="space-y-3">
+
+                <li class="hover:text-blue-600 cursor-pointer">
+                    Dashboard
+                </li>
+
+                <li class="hover:text-blue-600 cursor-pointer">
+                    Cursos disponibles
+                </li>
+
+                <li class="hover:text-blue-600 cursor-pointer">
+                    Mis inscripciones
+                </li>
+
+                <li class="hover:text-blue-600 cursor-pointer">
+                    Perfil
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- Contenido -->
+        <div class="flex-1 p-6">
+
+            <h2 class="text-2xl font-semibold mb-4">
+                Bienvenido Estudiante
+            </h2>
+
+            <div class="bg-white p-4 rounded shadow">
+                Aquí podrás ver los cursos disponibles e inscribirte.
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
