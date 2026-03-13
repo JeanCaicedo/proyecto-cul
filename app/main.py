@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from routes.academic_periods_routes import router as academic_periods_router
 from routes.users_routes import router as users_router
 from routes.faculties_routes import router as faculties_router
@@ -11,24 +13,17 @@ from routes.certificates_routes import router as certificates_router
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
-origins = [
-    #"http://localhost.tiangolo.com",
-    "db.rfvzywmfpysnjinykmdr.supabase.co",
-    "http://localhost"
-    #"http://localhost:8080",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 app.include_router(users_router)
 app.include_router(academic_periods_router)
@@ -40,6 +35,9 @@ app.include_router(classrooms_router)
 app.include_router(status_router)
 app.include_router(certificates_router)
 app.include_router(roles_router)
+
+FRONTEND_DIR = Path(__file__).resolve().parent.parent
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="static")
 
 
 if __name__ == "__main__":

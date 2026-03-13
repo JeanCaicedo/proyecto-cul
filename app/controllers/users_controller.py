@@ -6,31 +6,30 @@ from fastapi.encoders import jsonable_encoder
 
 class UserController:
         
-    def create_user(self, usuario: User):   
+    def create_user(self, usuario: User):
+        conn = None
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
             cursor.execute("INSERT INTO users (identity_document, first_name, middle_name, last_name, second_last_name, email, password_hash, role_id, faculty_id, status_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (usuario.identity_document, usuario.first_name, usuario.middle_name, usuario.last_name, usuario.second_last_name, usuario.email, usuario.password_hash, usuario.role_id, usuario.faculty_id, usuario.status_id))
             conn.commit()
-            conn.close()
             return {"resultado": "User created"}
         except psycopg2.Error as err:
             print(err)
-            # Si falla el INSERT, los datos no quedan guardados parcialmente en la base de datos
-            # Se usa para deshacer los cambios de la transacción activa cuando ocurre un error en el try.
-            conn.rollback()
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail=str(err))
         finally:
-            conn.close()
+            if conn:
+                conn.close()
         
     def get_user(self, user_id: int):
+        conn = None
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
             result = cursor.fetchone()
-            payload = []
-            content = {} 
-            
             
             if result is None:
                 raise HTTPException(status_code=404, detail="User not found")
@@ -49,41 +48,40 @@ class UserController:
                 'status_id': int(result[10])
             }
 
-            json_data = jsonable_encoder(content)
-            return json_data
+            return jsonable_encoder(content)
                 
         except psycopg2.Error as err:
             print(err)
-            # Se usa para deshacer los cambios de la transacción activa cuando ocurre un error en el try.
-            ##Maneja el estado de la transacción en la base de datos.Si un INSERT, UPDATE o DELETE falla dentro de una transacción, rollback() revierte esos cambios.
-            conn.rollback()
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail=str(err))
         finally:
-            conn.close()
+            if conn:
+                conn.close()
        
     def get_users(self):
+        conn = None
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM users")
             result = cursor.fetchall()
             payload = []
-            content = {} 
             for data in result:
-                content={
-                    'user_id':int(data[0]),
-                    'identity_document':data[1],
-                    'first_name':data[2],
-                    'middle_name':data[3] if data[3] is not None else None,
-                    'last_name':data[4],
-                    'second_last_name':data[5] if data[5] is not None else None,
-                    'email':data[6],
-                    'password_hash':data[7],
-                    'role_id':int(data[8]),
-                    'faculty_id':int(data[9]) if data[9] is not None else None,
-                    'status_id':int(data[10])
+                content = {
+                    'user_id': int(data[0]),
+                    'identity_document': data[1],
+                    'first_name': data[2],
+                    'middle_name': data[3] if data[3] is not None else None,
+                    'last_name': data[4],
+                    'second_last_name': data[5] if data[5] is not None else None,
+                    'email': data[6],
+                    'password_hash': data[7],
+                    'role_id': int(data[8]),
+                    'faculty_id': int(data[9]) if data[9] is not None else None,
+                    'status_id': int(data[10])
                 }
                 payload.append(content)
-                content = {}
             json_data = jsonable_encoder(payload)        
             if result:
                return {"resultado": json_data}
@@ -92,11 +90,15 @@ class UserController:
                 
         except psycopg2.Error as err:
             print(err)
-            conn.rollback()
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail=str(err))
         finally:
-            conn.close()
+            if conn:
+                conn.close()
 
     def update_user(self, id_user: int, user: User):
+        conn = None
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -130,11 +132,15 @@ class UserController:
             return {"resultado": "User updated"}
         except psycopg2.Error as err:
             print(err)
-            conn.rollback()
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail=str(err))
         finally:
-            conn.close()
+            if conn:
+                conn.close()
 
     def delete_user(self, id_user: int):
+        conn = None
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -143,7 +149,9 @@ class UserController:
             return {"resultado": "User deleted"}
         except psycopg2.Error as err:
             print(err)
-            conn.rollback()
+            if conn:
+                conn.rollback()
+            raise HTTPException(status_code=500, detail=str(err))
         finally:
-            conn.close()
-##user_controller = UserController()
+            if conn:
+                conn.close()
